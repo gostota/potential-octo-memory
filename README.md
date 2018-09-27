@@ -1,26 +1,16 @@
-# potential-octo-memory
-debugging some stuff
-
-
 import oracleCon
 import datetime
-import parameters
 
-def getQueryString(p):
+def getQueryString():
+    startTime=datetime.datetime(2018, 8, 2, 16, 0, 1, 522000)
+    endTime=datetime.datetime(2018, 8, 2, 17, 0, 1, 522000)
     return """
     select a.EVENTID, a.EVENTDATETIME, a.TargetSystem,a.OPERATION,a.APPLICATION,a.MSGFLOW,a.STAGE,a.MESSAGEID,a.LOGLEVEL,a.CODE
     from IIBNRT.ESBEVENT a,IIBNRT.ESBEVENTDETAILS b
     where a.EVENTID=b.EVENTID
-            and a.EVENTID like '{}'
-            and a.TARGETSYSTEM like '{}' 
-            and a.OPERATION like '{}' 
-            and a.APPLICATION like '{}' 
-            and a.MSGFLOW like '{}' 
-            and a.STAGE like '{}'
-            and a.LOGLEVEL like '{}'
             and a.EVENTDATETIME >= TO_DATE('{}','YYYY MM DD HH24:MI:SS')  
             and a.EVENTDATETIME <= TO_DATE('{}','YYYY MM DD HH24:MI:SS')
-            """.format(p.eventId,p.targetSystem,p.operation,p.application,p.msgFlow,p.stage,p.logLevel,p.startTime.strftime("%Y %m %d %H:%M:%S"),p.endTime.strftime("%Y %m %d %H:%M:%S"))
+            """.format(startTime.strftime("%Y %m %d %H:%M:%S"),endTime.strftime("%Y %m %d %H:%M:%S"))
 
 def switch(input,value):
     d={
@@ -33,6 +23,8 @@ def switch(input,value):
             '7': "and a.LOGLEVEL like '"+value+"'",
             '8': "and b.CODE like '"+value+"'",
             '9': "and b.MESSAGECCSID like '"+value+"'",
+            '10': "and utl_raw.cast_to_varchar2(dbms_lob.substr(b.MESSAGE,2000,1)) like '%"+value+"%'",           
+            '11': "and a.MESSAGEID like '%"+value+"%'"
         }
     return d[input]
 
@@ -67,22 +59,27 @@ def getTextOutput(oracle,data):
 oracle=oracleCon.oracleCon()
 oracle.connect()
 
-p=parameters.parameters()
 mainMenu={
     1:"Which one of the following parameters u want to change? 0:noone 1:EventID 2:TargetSysstem 3:Operation 4:Application 5:Msgflow 6:Stage 7:LogLevel 8:Code 9:MESSAGECCSID\n",
     2:"Print messageId:"}
 inp=input("type:\n1 to start searching\n2 to get transaaction via messageid\n3 to show database info\n")
 if inp=='1':
-    print(inp)
-    p=getQueryString(p)
+    p=getQueryString()
     paramInput=input(mainMenu[1])
     while paramInput!='0':
-        p+=switch(paramInput,input("Type required value\n"))
-        paramInput=input("Which one of the following parameters u want to change? 0:noone 1:EventID 2:TargetSysstem 3:Operation 4:Application 5:Msgflow 6:Stage 7:LogLevel 8:Code 9:MESSAGECCSID\n")
+        temp=input("Type required value\n")
+        if temp!="SPECSIMVOL":
+            p+=switch(paramInput,temp)
+            paramInput=input("Which one of the following parameters u want to change? 0:noone 1:EventID 2:TargetSysstem 3:Operation 4:Application 5:Msgflow 6:Stage 7:LogLevel 8:Code 9:MESSAGECCSID 10:search substr in message\n")
+        else: 
+            p+=switch(paramInput+100,temp)
+            paramInput=input("Which one of the following parameters u want to change? 0:noone 1:EventID 2:TargetSysstem 3:Operation 4:Application 5:Msgflow 6:Stage 7:LogLevel 8:Code 9:MESSAGECCSID 10:search substr in message\n")
     getTextOutput(oracle,oracle.execute(p))
 elif inp=='2':
-    print(mainMenu[2])
-    print(oracle.execute("SELECT * from IIBNRT.ESBEVENT a,IIBNRT.ESBEVENTDETAILS b where a.EVENTID=b.EVENTID where a.messageid='{}'").format(input()))
+    #Здесь нужно дописать как в первом случае
+    p=getQueryString()
+    p+=switch('11',input(mainMenu[2]))
+    getTextOutput(oracle,oracle.execute(p))
 elif inp=='3':
     getDBInfo(oracle)
 
