@@ -1,0 +1,23 @@
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from app.forms import ContactForm
+from django import forms
+from app import OracleCon
+from app import DataHandler
+
+def dbask(request):
+	if request.method == 'GET':
+		form = ContactForm()
+	else:
+		form = ContactForm(request.POST)
+	if form.is_valid():
+		try:
+			dictionary = {'1':999} 
+		except Exception as e:
+			return HttpResponse(e)
+
+		#return HttpResponse(status=404)
+		return render(request,'app/db_result.html',{ 'result':form['msgCont'],'result2':form['eventID'] })
+
+	return render(request,'app/db_form.html', {'form': form})
