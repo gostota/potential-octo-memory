@@ -1,0 +1,93 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+
+
+<h2>Button&DB2</h2>
+<br />
+
+	<form method="post">
+
+        {% for field in form %}
+            {{ field }}: {{field.label}}
+            <br/>
+		{% endfor %}
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit">Get count</button>
+		</div>
+
+		{{ result }}
+
+	</form>
+
+{% endblock %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>Button&DB2</h2>
+<br />
+    {{result}} {{result2}}
+	<a href='' class="btn btn-primary">
+		Back
+	</a>
+
+{% endblock %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test button</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+	<script>
+		$(function() {
+			$( ".datepicker" ).datepicker({
+				changeMonth: true,
+				changeYear: true,
+				yearRange: "1900:2012",
+            });
+		});
+	</script>>
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+			</div>
+		</div>
+	</div>
+	<div class="container body-content">
+		
+		{% block content %}{% endblock %}
+        
+		<hr/>
+        
+		<footer>
+            <p>&copy; SCH</p>
+        </footer>
+    </div>
+
+</body>
+</html>
