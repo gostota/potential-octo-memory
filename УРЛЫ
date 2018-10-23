@@ -1,0 +1,15 @@
+"""
+Definition of urls for Test_Form.
+"""
+
+from django.urls import path, include
+from . import views
+
+# Uncomment the next two lines to enable the admin:
+# from django.contrib import admin
+# admin.autodiscover()
+
+urlpatterns = [
+    path('', views.dbask, name='home'),
+]
+
