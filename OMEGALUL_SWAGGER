@@ -1,0 +1,73 @@
+{
+	"swagger": "2.0",
+	"info":
+    {
+		"version": "1.0.1",
+		"title": "Message Queue Cleaner",
+		"description": "A sample API that provides access to the queue list",
+		"termsOfService": "https://swagger.io/specification/#oasServers",
+		"contact": {
+			"name": "PaSPortal team",
+			"url": "http://rsb-ispmospas:82",
+			"email": "iTSpace_support@rosbank.ru"
+		}
+    },
+	"host": "rsb-ispmospas:82",
+	"basePath": "/api",
+	"schemes": [
+		"http"
+	],
+	"produces": [
+		"application/json"
+	],
+	"paths":{
+		"/MQCleaner":
+		{
+			"get":
+			{
+				"summary": "Returns all queues from a given Queue Manager",
+				"operationId": "queueList",
+				"parameters": [
+					{
+						"name": "qmgr",
+						"in": "path",
+						"description": "ID of queue manager",
+						"required": true,     
+						"type": "integer",
+						"format": "int32"
+					}
+        		],
+				"responses":
+				{
+					"200":
+					{
+						"description": "A list of Queues with their length.",
+						"schema":
+						{
+						"$ref": "#/definitions/Queue"
+						}
+					}
+        		}
+			}
+		}
+	},
+    "definitions":
+    {
+
+        "Queue":
+        {
+        	"properties":
+        	{
+				"name":
+				{
+					"type": "string"
+				},
+				length:
+				{
+					"type": "integer",
+					"format": "int32"
+				}
+       		}
+		}
+	}
+}
