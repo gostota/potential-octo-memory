@@ -1,27 +1,23 @@
-def heapify(m, i):
+def heapify(m, i, length=0):
     left = i * 2 + 1
     right = i * 2 + 2
-    largest = left
-    try:
-        largest = left if m[left] > m[right] else right
-    except IndexError:
-        if left >= len(m):
-            return
-        else:
-            right = left
+    if left >= len(m) + length:
+        return
+    elif right >= len(m) + length:
+        right = left
+    largest = left if m[left] > m[right] else right
     if m[largest] > m[i]:
         m[largest], m[i] = m[i], m[largest]
-        heapify(m, largest)
+        heapify(m, largest, length)
 def heap_sort(unsorted):
     m = unsorted[:]
     for i in list(range(len(m)//2))[::-1]:
         heapify(m, i)
-    for i in range(len(m)):
-        m[0], m[-1] = m[-1], m[0]
-        a = m[:len(m) - 1 - i]
-        heapify (a, 0)
-        m[:len(m) - 1 - i] = a
+    for i in range(1, len(m)):
+        m[0], m[-i] = m[-i], m[0]
+        heapify(m, 0, -i)
     return m
+
 
 def merge_sort(m):
     if len(m) == 1:
